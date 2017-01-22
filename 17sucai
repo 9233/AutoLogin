@@ -1,0 +1,68 @@
+	<?php
+	
+	$cookieVerify = dirname(__FILE__)."/17verify.txt";
+    $cookieSuccess = dirname(__FILE__)."/17success.txt";
+
+	// 获取cookie并保存
+	$ch = curl_init(); 
+	curl_setopt($ch, CURLOPT_URL, "http://www.17sucai.com/");
+	curl_setopt($ch, CURLOPT_HEADER, 0);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+	curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieVerify);
+	$rs = curl_exec($ch);
+	curl_close($ch); 
+ 
+function cut( $from, $start, $end, $lt = false, $gt = false )
+    {
+        $str = explode( $start, $from );
+        if ( isset( $str['1'] ) && $str['1'] != "" )
+        {
+            $str = explode( $end, $str['1']);
+            $strs = $str['0'];
+        }
+        else
+        {
+            $strs = "";
+        }
+        if ( $lt )
+        {
+            $strs = $start.$strs;
+        }
+        if ( $gt )
+        {
+            $strs .= $end;
+        }
+        return $strs;
+    }
+	
+     $token = cut($rs,'var token = \'','\'',false,false);	
+ 
+ //echo $token;
+	 
+	$url = "http://www.17sucai.com/auth"; 
+ 
+	// 返回结果存放在变量中，不输出
+     $ch = curl_init();	
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+	curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieVerify);
+	curl_setopt($ch, CURLOPT_HEADER, 1); 
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120); 
+			curl_setopt($ch,CURLOPT_POST,1);
+		$post_data["email"] = "907708051@qq.com";
+		$post_data["password"] = "7d5869b731053ef1adbf89052c69e47899c1a921";
+		$post_data["token"] = $token;
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+	//curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_login); 
+	curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieSuccess);
+	//curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string); 
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+	$result= curl_exec($ch);
+	curl_close($ch);
+
+	echo $result;
+
+
+
+		?>
