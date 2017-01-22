@@ -1,0 +1,38 @@
+<?php 
+header("content-Type: text/html; charset=UTF-8");
+$cookie_file = dirname(__FILE__) . '/cookiephp100.txt'; 
+$login_url="http://bbs.php100.com/login.php";
+$post_fields = array (
+  "forward" => "",
+  "jumpurl" => "http://bbs.php100.com/",
+  "step" => "2",
+  "lgt" => "0",
+  "pwuser" => "tarzan",
+  "pwpwd" => "yts7758521",
+  "hideid" => "0",
+  "cktime" => "31536000"
+);
+
+//提交登录表单请求
+$ch=curl_init($login_url);
+curl_setopt($ch,CURLOPT_HEADER,0);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch,CURLOPT_POST,1);
+curl_setopt($ch,CURLOPT_POSTFIELDS,$post_fields);
+curl_setopt($ch,CURLOPT_COOKIEJAR,$cookie_file); //存储提交后得到的cookie数据
+curl_exec($ch);
+curl_close($ch);
+
+//登录成功后，获取bbs首页数据
+//$url="http://bbs.php100.com/profile.php";
+
+$url="http://bbs.php100.com/profile.php";
+$ch=curl_init($url);
+curl_setopt($ch,CURLOPT_HEADER,0);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch,CURLOPT_COOKIEFILE,$cookie_file); //使用提交后得到的cookie数据做参数
+$contents=curl_exec($ch);
+curl_close($ch);
+//转码显示
+echo iconv('gbk', 'UTF-8', $contents);
+?>
